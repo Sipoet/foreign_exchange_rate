@@ -17,11 +17,7 @@ RUN bundle install
 
 COPY . /myapp
 
-# Make port 80 available to the world outside this container
+# Make port 3000 available to the world outside this container
 EXPOSE 3000
 
-# Define environment variable
-ENV NAME World
 
-# Run rails framework when the container launches
-# CMD "rails db:create && rails db:migrate"
