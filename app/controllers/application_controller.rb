@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def render_json_api_success(data)
-    render json: data, status: :success
+    render json: data, status: :ok
   end
 
   def render_json_api_error(data)

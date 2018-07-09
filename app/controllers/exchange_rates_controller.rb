@@ -7,15 +7,21 @@ class ExchangeRatesController < ApplicationController
                                                        to_currency: to_currency)
     exchange_rate.code = SecureRandom.uuid
     if exchange_rate.save
-      render_json_api_success message: 'Exchange rate success created'
+      feedback = {
+        message: 'Exchange rate success created'
+      }
+      render json: feedback, status: :created
     else
       render_json_api_error errors: exchange_rate.errors
     end
   end
 
   def destroy
-    exchange_rate = ExchangeRate.find_by(exchange_rate_params)
-    if exchange_rate_report.present?
+    from_currency = create_currency_if_not_exists(params[:from_currency])
+    to_currency = create_currency_if_not_exists(params[:to_currency])
+    exchange_rate = ExchangeRate.find_by(from_currency: from_currency,
+                                         to_currency: to_currency)
+    if exchange_rate.present?
       if exchange_rate.destroy
         render_json_api_success message: 'Exchange rate success destroyed'
       else
