@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ExchangeRateScenarioTest < ActionDispatch::IntegrationTest
+class ExchangeRateMovementIntegrationTest < ActionDispatch::IntegrationTest
   def setup
     @usd = ::Currency.new(code: 'USD')
     @usd.save!
@@ -10,33 +10,6 @@ class ExchangeRateScenarioTest < ActionDispatch::IntegrationTest
     @idr.save!
     @jpy = ::Currency.new(code: 'JPY')
     @jpy.save!
-  end
-
-  test 'create exchange rate list' do
-    params = {
-      from_currency: @usd.code, 
-      to_currency: @gbp.code
-    }
-    post exchange_rates_url, params: params, xhr: true
-    assert_response :success
-    exchange_rate = ::ExchangeRate.first
-    assert_equal(exchange_rate.present?, true)
-    assert_equal(@usd.id, exchange_rate.from_currency_id)
-    assert_equal(@gbp.id, exchange_rate.to_currency_id)
-  end
-
-  test 'destroy exhange rate list' do
-    exchange_rate = ::ExchangeRate.new(code: 'ER001',
-                                       from_currency: @usd, 
-                                       to_currency: @gbp)
-    exchange_rate.save!
-    params = {
-      from_currency: @usd.code, 
-      to_currency: @gbp.code
-    }
-    delete exchange_rates_url, params: params, xhr: true
-    number_row_of_exchange_rate = ::ExchangeRate.all.count
-    assert_equal(number_row_of_exchange_rate, 0)
   end
 
   test 'insert daily exchange rate data' do
@@ -55,6 +28,17 @@ class ExchangeRateScenarioTest < ActionDispatch::IntegrationTest
     exchange_rate = exchange_rate_movement.exchange_rate
     assert_equal(@usd.id, exchange_rate.from_currency_id)
     assert_equal(@gbp.id, exchange_rate.to_currency_id)
+  end
+
+  test 'insert daily exchange rate data - from currency can not equal with to currency' do
+    params = {
+      from_currency: @usd.code, 
+      to_currency: @usd.code,
+      effective_date: '2018-07-05',
+      rate: 0.75709
+    }
+    post exchange_rate_movements_url, params: params, xhr: true
+    assert_response 422
   end
 
   test 'get exchange rate report' do
@@ -101,20 +85,20 @@ class ExchangeRateScenarioTest < ActionDispatch::IntegrationTest
       {
         from_currency_code: @gbp.code,
         to_currency_code: @usd.code,
-        rate: 1.314233,
-        seven_day_avg: 1.316904 
+        rate: '1.314233',
+        seven_day_avg: '1.316904'
       },
       {
         from_currency_code: @usd.code,
         to_currency_code: @gbp.code,
-        rate: 0.7609,
-        seven_day_avg: 1
+        rate: '0.7609',
+        seven_day_avg: '1.0'
       },
       {
         from_currency_code: @usd.code,
         to_currency_code: @idr.code,
-        rate: 14347,
-        seven_day_avg: 13000
+        rate: '14347.0',
+        seven_day_avg: '13000.0'
       },
       {
         from_currency_code: @jpy.code,
@@ -172,8 +156,8 @@ class ExchangeRateScenarioTest < ActionDispatch::IntegrationTest
       {
         from_currency_code: @gbp.code,
         to_currency_code: @usd.code,
-        rate: 1.314233,
-        seven_day_avg: 1.316904 
+        rate: '1.314233',
+        seven_day_avg: '1.316904'
       }
     ]
     assert_exchange_rate_movement_report_results(expected_results, results)
@@ -186,8 +170,8 @@ class ExchangeRateScenarioTest < ActionDispatch::IntegrationTest
       {
         from_currency_code: @gbp.code,
         to_currency_code: @usd.code,
-        rate: 1.314233,
-        seven_day_avg: 1.316904 
+        rate: '1.314233',
+        seven_day_avg: '1.316904'
       }
     ]
     assert_exchange_rate_movement_report_results(expected_results, results)

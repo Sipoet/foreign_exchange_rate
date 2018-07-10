@@ -25,10 +25,10 @@ class ExchangeRatesController < ApplicationController
       if exchange_rate.destroy
         render_json_api_success message: 'Exchange rate success destroyed'
       else
-        render_json_api_error message: 'Exchange rate failed destroyed'
+        render_json_api_error errors: {base: ['Exchange rate failed destroyed']}
       end
     else
-      render_json_api_not_found message: 'Exchange rate not found'
+      render_json_api_not_found errors: {base: ['Exchange rate not found']}
     end
   end
 

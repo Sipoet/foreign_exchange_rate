@@ -70,8 +70,8 @@ class ExchangeRateMovementReport < ApplicationReport
 
   def decorate_row_result(row)
     if row['rate'].present? && row['seven_day_avg'].present?
-      rate = row['rate']
-      seven_day_avg = row['seven_day_avg']
+      rate = row['rate'].to_s
+      seven_day_avg = row['seven_day_avg'].to_s
     else
       rate = INSUFICIENT_DATA
       seven_day_avg = nil
