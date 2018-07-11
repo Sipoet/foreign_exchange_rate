@@ -39,7 +39,9 @@ foreign exchange rate for training with normalization database
 
 ## input daily exchange rate data
 method `POST`
+
 url `localhost:3000/exchange_rate_movements`
+
 request header
 ```
 content-type: application/json
@@ -73,7 +75,9 @@ response body if error
 
 ## get list exchange rate data to be tracked
 method `GET`
+
 url `localhost:3000/exchange_rate_movements/search`
+
 request header
 ```
 content-type: application/json
@@ -123,7 +127,9 @@ response body if error
 
 ## add an exchange rate into list
 method `POST`
+
 url `localhost:3000/exchange_rates`
+
 request header
 ```
 content-type: application/json
@@ -155,7 +161,9 @@ response body if error
 
 ## remove exchange rate from list
 method `DELETE`
+
 url `localhost:3000/exchange_rates`
+
 request header
 ```
 content-type: application/json
